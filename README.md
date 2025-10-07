@@ -4,17 +4,6 @@ This is a **mock server** that simulates a Custom LLM endpoint for testing integ
 
 ---
 
-## Features
-
-- Accepts **POST requests** with a JSON payload containing:
-  - `prompt` – full conversation + question
-  - `model` – model name
-- Requires **API Key** via `Authorization: Bearer <API_KEY>` header
-- Responds with a simple JSON object:  
-  ```json
-  { "response": "It works" }
-```
-
 
 ### Installation
 Clone the repository:
@@ -58,9 +47,38 @@ This is the Example response which your LLM should return as well as status code
 { "response": "It works!" }
 
 
-Next Steps
 
-Use this server as a reference to implement your own LLM endpoint which can be connected to NevronixAI.
-It demonstrates the POST request format you will receive and the response format expected by NevronixAI platform.
+## Additional information
 
-For support, please reach out: hi@nevronix.ai
+- Accepts **POST requests** with a JSON payload containing:
+  - `messages` – "system" prompt with previous history and context and "user" question
+
+=== Received JSON payload ===
+{
+    "model": "llama-3.3-70b-instruct",
+    "messages": [
+        {
+            "role": "system",
+            "content": "Always respond in this language: en-AU......"
+        },
+        {
+            "role": "user",
+            "content": "Tell me mode about your product? "
+        }
+    ]
+}
+
+
+  - `model` – model name. For example: llama-3.3-70b-instruct
+- Requires **API Key** via `Authorization: Bearer <API_KEY>` header
+- Responds with a simple JSON object and status code 200:  
+  ```json
+  { "response": "It works" }
+```
+
+
+## Next Steps
+
+Next, use the response from this script as a reference to implement your own Custom LLM solution with NevronixAI. This mock server demonstrates the exact POST request format you will receive from the platform, as well as the response format that NevronixAI expects.
+
+For support, contact us at hi@nevronix.ai

@@ -30,12 +30,17 @@ class CustomLLMHandler(BaseHTTPRequestHandler):
         content_length = int(self.headers.get('Content-Length', 0))
         body = self.rfile.read(content_length)
 
-        # --- 4️⃣ Parse JSON ---
+        # --- 4️⃣ Parse JSON and print all received parameters ---
         try:
             data = json.loads(body)
+            print("=== Received JSON payload ===")
+            print(json.dumps(data, indent=4))
+            print("=============================\n")
+            
+            # Extract question separately if needed
             question = data.get('question', '')
             print(f"Received question: {question}\n")
-        except:
+        except json.JSONDecodeError:
             self.send_response(400)
             self.send_header("Content-Type", "application/json")
             self.end_headers()
@@ -44,12 +49,12 @@ class CustomLLMHandler(BaseHTTPRequestHandler):
 
         # --- 5️⃣ Respond ---
         response_text = "It works"
-
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.end_headers()
         self.wfile.write(json.dumps({"response": response_text}).encode())
         print(f"Responded with: {response_text}\n")
+
 
 def run(server_class=HTTPServer, handler_class=CustomLLMHandler, port=5005):
     server_address = ('', port)
